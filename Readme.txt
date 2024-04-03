@@ -11,4 +11,4 @@ Performances of above methods are graphically represented using "graphical_resul
 
 Contact Dr. Caner Demirpolat -> canerd@alumni.sabanciuniv.edu
 
-Citation: 
+Citation: "Caner Demirpolat, Ugur Murat Leloglu, Forest stand segmentation with multi-temporal Sentinel-2 imagery and superpixels, J. Appl. Remote Sens. 18(1), 014530 (2024), doi: 10.1117/1.JRS.18.014530."
