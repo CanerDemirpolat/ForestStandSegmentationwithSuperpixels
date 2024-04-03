@@ -1,5 +1,4 @@
-%Script to obtain best and worst performance scenarios
-
+%Script to obtain best and worst performance scenarios segmentations
 clear all;close all;clc;
 seg1 = single(imread('ForestStandMap.tif'));
 features2  = imread('sentinel2_2018_0507.tif');
@@ -91,4 +90,4 @@ xxnumzer9(numsp/200)=superpixel_num_realized;
 
 end
 
-
+save('best_and_worst_results.mat');

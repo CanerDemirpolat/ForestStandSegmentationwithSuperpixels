@@ -1,9 +1,6 @@
-
-%Script to obtain SNIC CHM segmentations
 clear all
 close all
 clc
-
 seg1 = single(imread('ForestStandMap.tif'));
 chm = imread('CHM.tif');
 chm2 = imresize(chm,[size(seg1,1) size(seg1,2)],'bilinear');
@@ -23,20 +20,19 @@ chm2=imresize(chm2,[size(features2,1) size(features2,2)],'bilinear');
 sinir = single(imread('ForestStandEdges.tif'));
 sinir=imresize(single(sinir),[size(features2,1) size(features2,2)],'nearest');
 
-features1= features1(1:300, 1:300,:);
-features2= features2(1:300, 1:300,:);
-features3= features3(1:300, 1:300,:);
-features4= features4(1:300, 1:300,:);
-features5= features5(1:300, 1:300,:);
-features6= features6(1:300, 1:300,:);
-features7= features7(1:300, 1:300,:);
-features8= features8(1:300, 1:300,:);
-seg1= seg1(1:300, 1:300,:);
-sinir = sinir(1:300, 1:300);
-chm2=chm2(1:300, 1:300);
+features1= features1(1:300,1:300,:);
+features2= features2(1:300,1:300,:);
+features3= features3(1:300,1:300,:);
+features4= features4(1:300,1:300,:);
+features5= features5(1:300,1:300,:);
+features6= features6(1:300,1:300,:);
+features7= features7(1:300,1:300,:);
+features8= features8(1:300,1:300,:);
+seg1= seg1(1:300,1:300,:);
+sinir = sinir(1:300,1:300);
+chm2=chm2(1:300,1:300);
 
 
-seg1(find(seg1>60))=0;
 
 
 features1 = single(features1);
@@ -157,42 +153,34 @@ immm3(find(seg1==60))=0;
 imm =cat(3,immm,immm2,immm3);
 imm=uint8(255*imm);
 
-compactness=10;
 kk=1;
-m=compactness;
 morphologic_elementsize = 1;
 seRadius=morphologic_elementsize;
 mw='mean';
 chm2=255*mat2gray(chm2);
+compactness=0.205;
 
-%height=cat(3,height,height,height);
-for numsp=200:200:4000 
+for numsp=200:200:4000
 
+[l2] = LSC_mex(cat(3,uint8(chm2),uint8(chm2),uint8(chm2)), numsp,compactness);
 
-[l2,numl2] = snic_mex(uint8(chm2), numsp,compactness);
+% [l2] = LSC_mex(cat(3,uint8(2550*featurest(:,:,8)),uint8(2550*featurest(:,:,9)),uint8(2550*featurest(:,:,10))), numsp,compactness);
 superpixel_num_realized = length(unique(l2));
 hebe3=drawregionboundaries(l2, uint8(imm), [255 255 255]);
 hebe33=drawregionboundaries(l2, uint8(zeros(size(seg1,1),size(seg1,2),3)), [1 1 1]);
 hebe33=hebe33(:,:,1); 
 hebe33 = hebe33 .* uint8(seg1>0);
-
 l22=l2(64:180,28:160);
 seg11=seg1(64:180,28:160);
 l22 = renumberregions(l22);
 seg11=renumberregions(seg11);
-
-
-[a10(numsp/200),b10(numsp/200),c10(numsp/200)]=getUndersegmentationError(l22,seg11);
-
- 
- [TP10(numsp/200) FP10(numsp/200) TN10(numsp/200) FN10(numsp/200)] = compareBoundaryImagesSimple(hebe33, sinir, kk);
-AMR10(numsp/200) = TP10(numsp/200)/(TP10(numsp/200)+FP10(numsp/200));
-AMR1010(numsp/200) = TP10(numsp/200)/(TP10(numsp/200)+FN10(numsp/200));
-
-
-imwrite(hebe3,['SNIC_CHM_' num2str(superpixel_num_realized) '_UE_' num2str(a10(numsp/200)) '_AMR_'  num2str(AMR10(numsp/200)) '.tif']);
-
-numzer10(numsp/200)=superpixel_num_realized;
+[xxxa9(numsp/200),xxxb9(numsp/200),xxxc9(numsp/200)]=getUndersegmentationError(l2,seg1);
+[xxxa99(numsp/200),xxxb99(numsp/200),xxxc99(numsp/200)]=getUndersegmentationError(l22,seg11);
+[xxxTP9(numsp/200) xxxFP9(numsp/200) xxxTN9(numsp/200) xxxFN9(numsp/200)] = compareBoundaryImagesSimple(hebe33, sinir, kk);
+xxxAMR9(numsp/200) = xxxTP9(numsp/200)/(xxxTP9(numsp/200)+xxxFP9(numsp/200));
+xxxAMR99(numsp/200) = xxxTP9(numsp/200)/(xxxTP9(numsp/200)+xxxFN9(numsp/200));
+imwrite(hebe3,['LSC_' num2str(superpixel_num_realized) '_UE_' num2str(xxxa99(numsp/200)) '_AMR_'  num2str(xxxAMR9(numsp/200)) '.tif']);
+xxxnumzer9(numsp/200)=superpixel_num_realized;
 end
 
-save('SNIC_results_incomplete.mat')
+save('LSC_results_imcomplete.mat');

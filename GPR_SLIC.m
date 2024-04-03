@@ -85,7 +85,7 @@
 % Note that most of the computation time is not in the clustering, but rather
 % in the region cleanup process.
 
-
+%Updated by adding GPR Model
 function [l, Am, Sp, d] = GPR_SLIC(im, k, m, seRadius, colopt, mw, nItr, eim, We)
     
     if ~exist('colopt','var') || isempty(colopt), colopt = 'mean'; end

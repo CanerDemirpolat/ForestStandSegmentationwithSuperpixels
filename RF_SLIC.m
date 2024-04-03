@@ -85,6 +85,7 @@
 % Note that most of the computation time is not in the clustering, but rather
 % in the region cleanup process.
 
+%Updated by adding RF Model 
 
 function [l, Am, Sp, d] = RF_SLIC(im, k, m, seRadius, colopt, mw, nItr, eim, We)
     

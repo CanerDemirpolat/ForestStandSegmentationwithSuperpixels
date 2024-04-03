@@ -1,36 +1,25 @@
+%Script to obtain segmentations by RF-SLIC, GPR-SLIC, ERS-CHM, SLIC-CHM and SLIC-RGB methods
 clear all;close all;clc;
-seg1 = single(imread('hadi_mescereler.tif'));
+seg1 = single(imread('ForestStandMap.tif'));
 
-chm = imread('bakembu.tif');
+chm = imread('CHM.tif');
 chm2 = imresize(chm,[size(seg1,1) size(seg1,2)],'bilinear');
 chm2(find(chm2<0))=0;
-tur1 = single(imread('rasterizeddd_turler_subseet.tif'));
+%tur1 = single(imread('rasterizeddd_turler_subseet.tif'));
 
-[features1 rr] = geotiffread('hadi_2018_0407.tif');
-features2  = imread('hadi_2018_0507.tif');
-features3 = imread('hadi_2018_0701.tif');
-features4 = imread('hadi_2018_0803.tif');
-features5 = imread('hadi_2018_0912.tif');
-features6 = imread('hadi_2018_1101.tif');
-features7 = imread('hadi_2019_0214.tif');
-features8 = imread('hadi_2019_0226.tif');
+[features1 rr] = geotiffread('sentinel2_2018_0407.tif');
+features2  = imread('sentinel2_2018_0507.tif');
+features3 = imread('sentinel2_2018_0701.tif');
+features4 = imread('sentinel2_2018_0803.tif');
+features5 = imread('sentinel2_2018_0912.tif');
+features6 = imread('sentinel2_2018_1101.tif');
+features7 = imread('sentinel2_2019_0214.tif');
+features8 = imread('sentinel2_2019_0226.tif');
 seg1=imresize(single(seg1),[size(features2,1) size(features2,2)],'nearest');
-height = imread('TreeHeights_isvicre.tif');
-radius = imread('TreeRadius_isvicre.tif');
-count= imread('TreeCounts_isvicre.tif');
+
 
 chm2=imresize(chm2,[size(features2,1) size(features2,2)],'bilinear');
-
-
-
-height = imresize((height),[size(seg1,1) size(seg1,2)],'nearest');
-radius = imresize((radius),[size(seg1,1) size(seg1,2)],'nearest');
-count = imresize((count),[size(seg1,1) size(seg1,2)],'nearest');
-height = medfilt2(height);
-radius = medfilt2(radius);
-count = medfilt2(count);
-
-sinir = single(imread('caner_edges_isvicre_son_alan.tif'));
+sinir = single(imread('ForestStandEdges.tif'));
 sinir=imresize(single(sinir),[size(features2,1) size(features2,2)],'nearest');
 
 features1= features1(1:300,1:300,:);
@@ -42,9 +31,6 @@ features6= features6(1:300,1:300,:);
 features7= features7(1:300,1:300,:);
 features8= features8(1:300,1:300,:);
 seg1= seg1(1:300,1:300,:);
-height = height(1:300,1:300);
-radius = radius(1:300,1:300);
-count = count(1:300,1:300);
 sinir = sinir(1:300,1:300);
 chm2=chm2(1:300,1:300);
 
@@ -52,8 +38,8 @@ chm2=chm2(1:300,1:300);
 
 
 features1 = single(features1);
-ndvi1 = (features1(:,:,8)-features1(:,:,4))./(features1(:,:,8)+features1(:,:,4)); %NDVI hesabı
-rgvi1 = (features1(:,:,4)-features1(:,:,3))./(features1(:,:,3)+features1(:,:,4)); %NDVI hesabı
+ndvi1 = (features1(:,:,8)-features1(:,:,4))./(features1(:,:,8)+features1(:,:,4));
+rgvi1 = (features1(:,:,4)-features1(:,:,3))./(features1(:,:,3)+features1(:,:,4)); 
 rendvia1 = (features1(:,:,5)-features1(:,:,4))./(features1(:,:,5)+features1(:,:,4));
 rendvib1 = (features1(:,:,6)-features1(:,:,5))./(features1(:,:,6)+features1(:,:,5));
 reci1= features1(:,:,7)./features1(:,:,5)-1;
@@ -63,8 +49,8 @@ features1=cat(3,ndvi1,rgvi1,rendvia1,rendvib1,reci1,vari1,features1/10000);
 
 
 features2 = single(features2);
-ndvi2 = (features2(:,:,8)-features2(:,:,4))./(features2(:,:,8)+features2(:,:,4)); %NDVI hesabı
-rgvi2 = (features2(:,:,4)-features2(:,:,3))./(features2(:,:,3)+features2(:,:,4)); %NDVI hesabı
+ndvi2 = (features2(:,:,8)-features2(:,:,4))./(features2(:,:,8)+features2(:,:,4)); 
+rgvi2 = (features2(:,:,4)-features2(:,:,3))./(features2(:,:,3)+features2(:,:,4)); 
 rendvia2 = (features2(:,:,5)-features2(:,:,4))./(features2(:,:,5)+features2(:,:,4));
 rendvib2 = (features2(:,:,6)-features2(:,:,5))./(features2(:,:,6)+features2(:,:,5));
 reci2= features2(:,:,7)./features2(:,:,5)-1;
@@ -73,8 +59,8 @@ features2=cat(3,ndvi2,rgvi2,rendvia2,rendvib2,reci2,vari2,features2/10000);
 
 
 features3 = single(features3);
-ndvi3 = (features3(:,:,8)-features3(:,:,4))./(features3(:,:,8)+features3(:,:,4)); %NDVI hesabı
-rgvi3 = (features3(:,:,4)-features3(:,:,3))./(features3(:,:,3)+features3(:,:,4)); %NDVI hesabı
+ndvi3 = (features3(:,:,8)-features3(:,:,4))./(features3(:,:,8)+features3(:,:,4)); 
+rgvi3 = (features3(:,:,4)-features3(:,:,3))./(features3(:,:,3)+features3(:,:,4)); 
 rendvia3 = (features3(:,:,5)-features3(:,:,4))./(features3(:,:,5)+features3(:,:,4));
 rendvib3 = (features3(:,:,6)-features3(:,:,5))./(features3(:,:,6)+features3(:,:,5));
 reci3= features3(:,:,7)./features3(:,:,5)-1;
@@ -83,8 +69,8 @@ features3=cat(3,ndvi3,rgvi3,rendvia3,rendvib3,reci3,vari3,features3/10000);
 
 
 features4 = single(features4);
-ndvi4 = (features4(:,:,8)-features4(:,:,4))./(features4(:,:,8)+features4(:,:,4)); %NDVI hesabı
-rgvi4 = (features4(:,:,4)-features4(:,:,3))./(features4(:,:,3)+features4(:,:,4)); %NDVI hesabı
+ndvi4 = (features4(:,:,8)-features4(:,:,4))./(features4(:,:,8)+features4(:,:,4));
+rgvi4 = (features4(:,:,4)-features4(:,:,3))./(features4(:,:,3)+features4(:,:,4)); 
 rendvia4 = (features4(:,:,5)-features4(:,:,4))./(features4(:,:,5)+features4(:,:,4));
 rendvib4 = (features4(:,:,6)-features4(:,:,5))./(features4(:,:,6)+features4(:,:,5));
 reci4= features4(:,:,7)./features4(:,:,5)-1;
@@ -93,8 +79,8 @@ features4=cat(3,ndvi4,rgvi4,rendvia4,rendvib4,reci4,vari4,features4/10000);
 
 
 features5 = single(features5);
-ndvi5 = (features5(:,:,8)-features5(:,:,4))./(features5(:,:,8)+features5(:,:,4)); %NDVI hesabı
-rgvi5 = (features5(:,:,4)-features5(:,:,3))./(features5(:,:,3)+features5(:,:,4)); %NDVI hesabı
+ndvi5 = (features5(:,:,8)-features5(:,:,4))./(features5(:,:,8)+features5(:,:,4));
+rgvi5 = (features5(:,:,4)-features5(:,:,3))./(features5(:,:,3)+features5(:,:,4));
 rendvia5 = (features5(:,:,5)-features5(:,:,4))./(features5(:,:,5)+features5(:,:,4));
 rendvib5 = (features5(:,:,6)-features5(:,:,5))./(features5(:,:,6)+features5(:,:,5));
 reci5= features5(:,:,7)./features5(:,:,5)-1;
@@ -102,8 +88,8 @@ vari5 = (features5(:,:,3)-features5(:,:,4))./(features5(:,:,3)+features5(:,:,4)-
 features5=cat(3,ndvi5,rgvi5,rendvia5,rendvib5,reci5,vari5,features5/10000);
 
 features6 = single(features6);
-ndvi6 = (features6(:,:,8)-features6(:,:,4))./(features6(:,:,8)+features6(:,:,4)); %NDVI hesabı
-rgvi6 = (features6(:,:,4)-features6(:,:,3))./(features6(:,:,3)+features6(:,:,4)); %NDVI hesabı
+ndvi6 = (features6(:,:,8)-features6(:,:,4))./(features6(:,:,8)+features6(:,:,4));
+rgvi6 = (features6(:,:,4)-features6(:,:,3))./(features6(:,:,3)+features6(:,:,4));
 rendvia6 = (features6(:,:,5)-features6(:,:,4))./(features6(:,:,5)+features6(:,:,4));
 rendvib6 = (features6(:,:,6)-features6(:,:,5))./(features6(:,:,6)+features6(:,:,5));
 reci6= features6(:,:,7)./features6(:,:,5)-1;
@@ -111,8 +97,8 @@ vari6 = (features6(:,:,3)-features6(:,:,4))./(features6(:,:,3)+features6(:,:,4)-
 features6=cat(3,ndvi6,rgvi6,rendvia6,rendvib6,reci6,vari6,features6/10000);
 
 features7 = single(features7);
-ndvi7 = (features7(:,:,8)-features7(:,:,4))./(features7(:,:,8)+features7(:,:,4)); %NDVI hesabı
-rgvi7 = (features7(:,:,4)-features7(:,:,3))./(features7(:,:,3)+features7(:,:,4)); %NDVI hesabı
+ndvi7 = (features7(:,:,8)-features7(:,:,4))./(features7(:,:,8)+features7(:,:,4)); 
+rgvi7 = (features7(:,:,4)-features7(:,:,3))./(features7(:,:,3)+features7(:,:,4)); 
 rendvia7 = (features7(:,:,5)-features7(:,:,4))./(features7(:,:,5)+features7(:,:,4));
 rendvib7 = (features7(:,:,6)-features7(:,:,5))./(features7(:,:,6)+features7(:,:,5));
 reci7= features7(:,:,7)./features7(:,:,5)-1;
@@ -121,8 +107,8 @@ features7=cat(3,ndvi7,rgvi7,rendvia7,rendvib7,reci7,vari7,features7/10000);
 
 
 features8 = single(features8);
-ndvi8 = (features8(:,:,8)-features8(:,:,4))./(features8(:,:,8)+features8(:,:,4)); %NDVI hesabı
-rgvi8 = (features8(:,:,4)-features8(:,:,3))./(features8(:,:,3)+features8(:,:,4)); %NDVI hesabı
+ndvi8 = (features8(:,:,8)-features8(:,:,4))./(features8(:,:,8)+features8(:,:,4)); 
+rgvi8 = (features8(:,:,4)-features8(:,:,3))./(features8(:,:,3)+features8(:,:,4));
 rendvia8 = (features8(:,:,5)-features8(:,:,4))./(features8(:,:,5)+features8(:,:,4));
 rendvib8 = (features8(:,:,6)-features8(:,:,5))./(features8(:,:,6)+features8(:,:,5));
 reci8 = features8(:,:,7)./features8(:,:,5)-1;
@@ -201,7 +187,7 @@ seg11=renumberregions(seg11);
 AMR2(numsp/200) = TP2(numsp/200)/(TP2(numsp/200)+FP2(numsp/200));
 AMR22(numsp/200) = TP2(numsp/200)/(TP2(numsp/200)+FN2(numsp/200));
 
-imwrite(hebe3,['MATLABSLIC_RGB_S2_' num2str(superpixel_num_realized) '_UE_' num2str(a22(numsp/200)) '_AMR_'  num2str(AMR2(numsp/200)) '_.tif']);
+imwrite(hebe3,['SLIC_RGB_' num2str(superpixel_num_realized) '_UE_' num2str(a22(numsp/200)) '_AMR_'  num2str(AMR2(numsp/200)) '_.tif']);
 numzer2(numsp/200)=superpixel_num_realized;
 
 
@@ -255,7 +241,7 @@ seg11=renumberregions(seg11);
 AMR5(numsp/200) = TP5(numsp/200)/(TP5(numsp/200)+FP5(numsp/200));
 AMR55(numsp/200) = TP5(numsp/200)/(TP5(numsp/200)+FN5(numsp/200));
 
-imwrite(hebe3,['MATLABSLIC_CHM_' num2str(superpixel_num_realized) '_UE_' num2str(a55(numsp/200)) '_AMR_'  num2str(AMR5(numsp/200)) '_.tif']);
+imwrite(hebe3,['SLIC_CHM_' num2str(superpixel_num_realized) '_UE_' num2str(a55(numsp/200)) '_AMR_'  num2str(AMR5(numsp/200)) '_.tif']);
 numzer5(numsp/200)=superpixel_num_realized;
 
 
@@ -278,7 +264,7 @@ seg11=renumberregions(seg11);
 AMR6(numsp/200) = TP6(numsp/200)/(TP6(numsp/200)+FP6(numsp/200));
 AMR66(numsp/200) = TP6(numsp/200)/(TP6(numsp/200)+FN6(numsp/200));
 
-imwrite(hebe3,['RFSLIC_20PERCENT_' num2str(superpixel_num_realized) '_UE_' num2str(a66(numsp/200)) '_AMR_'  num2str(AMR6(numsp/200)) '.tif']);
+imwrite(hebe3,['RF_SLIC_' num2str(superpixel_num_realized) '_UE_' num2str(a66(numsp/200)) '_AMR_'  num2str(AMR6(numsp/200)) '.tif']);
 numzer6(numsp/200)=superpixel_num_realized;
 
 [l2, Am, C] = GPR_SLIC(featurest, numsp, compactness, morphologic_elementsize, 'mean');
@@ -466,3 +452,4 @@ legend('SLIC RGB','ERS CHM','MATLABSLIC CHM','RF-SLIC','GRP-SLIC')
 title('Undersegmentation Error 2')
 xlabel('Number of Superpixels')
 
+save('results_5methods.mat');
